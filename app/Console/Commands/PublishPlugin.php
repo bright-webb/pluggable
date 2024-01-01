@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use ZipArchive;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class PublishPlugin extends Command
 {
@@ -28,6 +29,7 @@ class PublishPlugin extends Command
     {
         $pluginName = ucfirst($this->argument('name'));
 
+        $author = ucwords($this->ask('Author name'));
         // Define paths
         $pluginPath = app_path("Plugins/{$pluginName}");
         $zipFilePath = storage_path("app/{$pluginName}.zip");
@@ -48,8 +50,20 @@ class PublishPlugin extends Command
 
                 $zip->addFile($filePath, $relativePath);
             }
+            else{
+                $zip->addEmptyDir($file->getFilename());
+            }
         }
 
         $zip->close();
+
+        // Send the file to another server
+        $contents = fopen("$zipFilePath", "r");
+
+        $response = Http::attach('file', $contents)->post("http://localhost:8000/api/plugin/publish", ["author" => $author, 'plugin_name' => $pluginName]);
+
+        // Optionally, you can get the response body
+        $responseBody = $response->body();
+        $this->info($responseBody);
     }
 }

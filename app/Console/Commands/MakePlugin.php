@@ -100,48 +100,9 @@ class MakePlugin extends Command
             $this->updateApiRoutes($name);
         }
 
-        // Create a file in the config directory and insert line of code
-        $configFile = $path . "/config/plugin.php";
 
-        $content = <<<CONTENT
-        <?php
-        /*
-        |--------------------------------------------------------------------------
-        | Plugin Configuration
-        |--------------------------------------------------------------------------
-        |
-        | Here you can configure your plugin.
-        |
-        */
-
-        // Middleware
-        return [
-            'middleware' => [
-                // Register your plugin middleware here
-            ],
-        ];
-
-        // Dependencies
-        return [
-            'dependencies' => [
-                // Specify your plugin dependencies here
-                'laravel/framework' => '9.0.*',
-            ],
-        ];
-
-        // Plugin Information
-        return [
-            'name' => '{$name}',
-            'version' => '1.0.0',
-            'description' => '{$description}',
-        ];
-        ?>
-        CONTENT;
-
-       File::put($configFile, $content);
-
-        $serviceProviderName = ucfirst($name) . 'PluginServiceProvider';
-        $serviceProviderFile = $path . "/Providers/{$serviceProviderName}.php";
+       $serviceProviderName = ucfirst($name) . 'PluginServiceProvider';
+       $serviceProviderFile = $path . "/Providers/{$serviceProviderName}.php";
         $this->insertFile($serviceProviderFile, 'service-provider', [
             '{{ServiceProviderClass}}' => $serviceProviderName,
             '{{Plugin}}' => ucfirst($name),
@@ -152,7 +113,52 @@ class MakePlugin extends Command
         $serviceProviderClass = "App\\Plugins\\$name\\Providers\\$serviceProviderName";
         $this->pluginManager->registerPlugin($name, $serviceProviderClass, $description, $routeType);
 
+                // Create a file in the config directory and insert line of code
+                $configFile = $path . "/config/plugin.php";
 
+                $content = <<<CONTENT
+                <?php
+                /*
+                |--------------------------------------------------------------------------
+                | Plugin Configuration
+                |--------------------------------------------------------------------------
+                |
+                | Here you can configure your plugin.
+                |
+                */
+
+                // Middleware
+                return [
+                    // Middleware
+                    'middleware' => [
+                        // Register your plugin middleware here
+                    ],
+
+                    // Dependencies
+                    'dependencies' => [
+                        // Specify your plugin dependencies here
+                        // 'laravel/framework' => '9.0.*',
+                    ],
+
+                    // Plugin Dependencies
+                    'plugin_dependencies' => [
+                        // Specify your plugin dependencies here
+                        // 'Test',
+                    ],
+
+                    // Plugin Information
+                    'plugin_info' => [
+                        'name' => '{$name}',
+                        'version' => '1.0.0',
+                        'description' => '{$description}',
+                        'service_provider' => '{$serviceProviderClass}',
+                        'route_type' => '{$routeType}',
+                    ],
+                ];
+                ?>
+                CONTENT;
+
+               File::put($configFile, $content);
 
         // insert sample unit test code
         $sampleCode = <<<PHP

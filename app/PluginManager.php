@@ -42,6 +42,7 @@
                         'name' => $plugin->name,
                         'service_provider' => $plugin->service_provider,
                         'description' => $plugin->description,
+                        'author' => $plugin->author,
                         'route_type' => $plugin->route_type,
                         'status' => $plugin->status,
                         'version' => $plugin->version,

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Publish;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -15,15 +17,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::post('/plugin/publish', [Publish::class, 'publish']);
+Route::get('/plugin/{name}', [Publish::class, 'getPlugin']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
-// Plugin: auth
-Route::group(['namespace' => 'app\Plugins\auth\Routes'], function () {
-    require app_path('Plugins/Auth/Routes/api.php');
-});

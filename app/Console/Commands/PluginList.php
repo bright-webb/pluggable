@@ -29,6 +29,6 @@ class PluginList extends Command
         $pluginManager = app(PluginManager::class);
 
         $this->info('Registered Plugins:');
-        $this->table(['Plugin Name', 'Service Providers', 'Description', "Author", "Route Type", "Status", "Version"], $pluginManager->getRegisteredPlugins()->toArray());
+        $this->table(['Plugin Name', 'Service Providers', 'Description', 'Author', "Route Type", "Status", "Version"], $pluginManager->getRegisteredPlugins()->toArray());
     }
 }
