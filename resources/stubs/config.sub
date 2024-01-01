@@ -1,0 +1,4 @@
+// config boilerpage for {{Plugin}}
+<?php
+    // your configuration goes here
+?>

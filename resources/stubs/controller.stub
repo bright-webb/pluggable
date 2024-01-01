@@ -1,0 +1,14 @@
+<?php
+    namespace App\Plugins\{{Plugin}}\Controllers;
+
+    use App\Http\Controllers\Controller;
+    use Illuminate\Http\Request;
+
+    class {{Plugin}}Controller extends Controller
+    {
+        public function index(Request $request){
+            return "Hello from {{Plugin}} Controller";
+            // less is more
+        }
+    }
+?>

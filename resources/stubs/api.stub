@@ -1,0 +1,12 @@
+
+<?php
+// app/Plugins/{{Plugin}}/Routes/api.php
+use Illuminate\Support\Facades\Route;
+use App\Plugins\{{Plugin}}\Controllers\{{Plugin}}Controller;
+
+Route::prefix('{{plugin}}')->group(function () {
+    Route::get('index', [{{Plugin}}Controller::class, 'index']);
+    // Add other routes for your controller
+});
+
+?>
