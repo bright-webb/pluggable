@@ -162,7 +162,7 @@ class MakePlugin extends Command
         $sampleCode = <<<PHP
         <?php
 
-        namespace App\Plugin\{$name}\Test;
+        namespace App\Plugin\\{$name}\Tests;
 
         use Tests\TestCase;
 
@@ -175,7 +175,7 @@ class MakePlugin extends Command
         }
         PHP;
 
-        File::put($path . '/tests/' . ucfirst($name) . 'UnitTest.php', $sampleCode);
+        File::put($path . '/Tests/' . ucfirst($name) . 'UnitTest.php', $sampleCode);
 
 
 
