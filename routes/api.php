@@ -24,3 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+
+// Plugin: repo
+Route::group(['namespace' => 'app\Plugins\repo\Routes'], function () {
+    require app_path('Plugins/Repo/Routes/api.php');
+});

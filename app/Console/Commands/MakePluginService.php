@@ -69,20 +69,19 @@ class MakePluginService extends Command
 
     protected function generateServiceContent($name, $service)
     {
+        $serviceName = ucfirst($service);
+        $serviceName  = "{$serviceName}Service";
+
         return <<<PHP
             <?php
             namespace App\Plugins\\$name\Services;
-            // use Illuminate\Support\Facades\Redis;
-            use App\Plugins\\$name\Events\\$service;
+            use Illuminate\Support\ServiceProvider;
 
-            class {$service}Service
+            class $serviceName extends ServiceProvider
             {
-                public function {$name}Service()
-                {
-                    // Abracadabra
-                    return "Hello, World!";
-                }
+                // Write your service method
             }
+
             PHP;
     }
 }

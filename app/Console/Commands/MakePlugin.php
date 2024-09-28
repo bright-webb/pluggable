@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\PluginManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use App\PluginManager;
 
 class MakePlugin extends Command
 {
@@ -19,7 +19,7 @@ class MakePlugin extends Command
      *
      * @var string
      */
-    protected $signature = 'make:plugin {name} {--D|description=} {--route-type=web}';
+    protected $signature = 'make:plugin {name} {--D|description=} {--type=web}';
 
     /**
      * The console command description.
@@ -35,7 +35,7 @@ class MakePlugin extends Command
     {
         $name = strtolower($this->argument('name'));
         $description = $this->option('description');
-        $routeType = $this->option('route-type');
+        $routeType = $this->option('type');
         // check if name contains  'plugin' and remove the 'plugin'
         if (strpos($name, 'plugin') !== false) {
             $name = str_replace('plugin', '', $name);
@@ -96,8 +96,6 @@ class MakePlugin extends Command
         else{
             $routesFile = $routesDirectory . DIRECTORY_SEPARATOR . 'api.php';
             file_put_contents($routesFile, '');
-              // update api routes
-            $this->updateApiRoutes($name);
         }
 
 
@@ -152,7 +150,7 @@ class MakePlugin extends Command
                         'version' => '1.0.0',
                         'description' => '{$description}',
                         'service_provider' => '{$serviceProviderClass}',
-                        'route_type' => '{$routeType}',
+                        'type' => '{$routeType}',
                     ],
                 ];
                 ?>
@@ -164,7 +162,7 @@ class MakePlugin extends Command
         $sampleCode = <<<PHP
         <?php
 
-        namespace App\Plugin\Test;
+        namespace App\Plugin\{$name}\Test;
 
         use Tests\TestCase;
 
@@ -292,33 +290,6 @@ class MakePlugin extends Command
         return '';
     }
 
-    // update api routes
-    protected function updateApiRoutes($pluginName)
-    {
-        $apiRoutesFile = base_path('routes/api.php');
-
-        // Check if the file exists
-        if (File::exists($apiRoutesFile)) {
-            // Read the existing content of api.php
-            $content = File::get($apiRoutesFile);
-            $plugin = ucfirst($pluginName);
-            // Append the plugin routes to the end of api.php
-            $content .= "\n\n// Plugin: $pluginName\n";
-            $content .= <<<PHP
-Route::group(['namespace' => 'app\\Plugins\\$pluginName\\Routes'], function () {
-    require app_path('Plugins/{$plugin}/Routes/api.php');
-});
-PHP;
-
-
-            // Write the modified content back to api.php
-            File::put($apiRoutesFile, $content);
-
-            $this->info("Routes for '$pluginName' added to api.php");
-        } else {
-            $this->error("Unable to locate api.php file.");
-        }
-    }
 
     // create assets directories
     protected function createDirectories($pluginPath)
